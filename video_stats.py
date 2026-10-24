@@ -31,7 +31,7 @@ def get_playlist_id():
 def get_video_ids(playlistId):
     video_ids = []
     pageToken = None
-    base_url = f"https://youtube.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults={maxResults}&playlistId=UUX6OQ3DkcsbYNE6H8uQQuVA&key=AIzaSyCqdpMGlk-kVTDPDWd7biCfCMlED8k1VXg"
+    base_url = f"https://youtube.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults={maxResults}&playlistId={playlistId}&key={API_KEY}"
 
     try:
         while True:
@@ -61,7 +61,7 @@ def batch_list(video_id_lst, batch_size):
     for video_id in range(0, len(video_id_lst), batch_size):
         yield video_id_lst[video_id:video_id + batch_size]
 
-"https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails&part=snippet&part=statistics&id=0e3GPea1Tyg&key=[YOUR_API_KEY]"
+
 def extract_video_data(video_ids):
     extracted_data = []
 
@@ -105,4 +105,5 @@ def extract_video_data(video_ids):
 if __name__ == "__main__":
     playlist_id = get_playlist_id()
     video_ids = get_video_ids(playlist_id)
-    print(extract_video_data(video_ids))
+    video_data = extract_video_data(video_ids)
+    
