@@ -93,18 +93,18 @@ def extract_video_data(video_ids):
                 contentDetails = item['contentDetails']
                 statistics = item['statistics']
 
-            # là nous avons les 50 first video pour avoir toutes les videos il faut juste qu'il soit dans le for
-            video_data = {
-                "video_id": video_id,
-                "title": snippet['title'],
-                "description": snippet['description'],
-                "publishedAt": snippet['publishedAt'],
-                "duration": contentDetails['duration'],
-                "viewCount": statistics.get('viewCount', None),
-                "likeCount": statistics.get('likeCount', None),
-                "commentCount": statistics.get('commentCount', None)
-            }
-            extracted_data.append(video_data)
+                # là nous avons les 50 first video pour avoir toutes les videos il faut juste qu'il soit dans le for
+                video_data = {
+                    "video_id": video_id,
+                    "title": snippet['title'],
+                    "description": snippet['description'],
+                    "publishedAt": snippet['publishedAt'],
+                    "duration": contentDetails['duration'],
+                    "viewCount": statistics.get('viewCount', None),
+                    "likeCount": statistics.get('likeCount', None),
+                    "commentCount": statistics.get('commentCount', None)
+                }
+                extracted_data.append(video_data)
 
         return extracted_data
 
