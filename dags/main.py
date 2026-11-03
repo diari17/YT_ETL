@@ -37,7 +37,7 @@ with DAG(
     dag_id='produce_json',
     default_args=default_args,
     description='DAG to produce JSON file with raw data',
-    schedule_interval='0 14 * * *',  # Run every day at 14h
+    schedule='0 14 * * *',  # Run every day at 14h
     catchup=False,  # Do not perform backfill
 ) as dag:
     
@@ -54,7 +54,7 @@ with DAG(
     dag_id='update_db',
     default_args=default_args,
     description='DAG to process JSON file and insert data into both staging and core schemas',
-    schedule_interval='0 15 * * *',  # Run every day at 14h
+    schedule='0 15 * * *',  # Run every day at 14h
     catchup=False,  # Do not perform backfill
 ) as dag:
     
@@ -69,7 +69,7 @@ with DAG(
     dag_id='data_quality',
     default_args=default_args,
     description='DAG to check the data quality on both layers in the db',
-    schedule_interval='0 16 * * *',  # Run every day at 14h
+    schedule='0 16 * * *',  # Run every day at 14h
     catchup=False,  # Do not perform backfill
 ) as dag:
     
