@@ -1,5 +1,6 @@
 import os
 import pytest
+import psycopg2
 from unittest import mock
 from airflow.models import Variable, Connection, DagBag
 
@@ -27,6 +28,41 @@ def mock_postgres_conn_vars():
     with mock.patch.dict("os.environ", AIRFLOW_CONN_POSTGRES_DB_YT_ELT=conn_uri):
         yield Connection.get_connection_from_secrets(conn_id="POSTGRES_DB_YT_ELT")
 
-@pytest.fixture
+@pytest.fixture()
 def dagbag():
     yield DagBag()
+
+@pytest.fixture()
+def airflow_variable():
+    def get_airflow_variable(variable_name):
+        env_var = f"AIRFLOW_VAR_{variable_name.upper()}"
+        return os.environ.get(env_var)
+
+    return get_airflow_variable
+
+@pytest.fixture()
+def real_postgres_connection():
+    dbname = os.getenv("ETL_DATABASE_NAME")
+    user = os.getenv("ETL_DATABASE_USERNAME")
+    password = os.getenv("ETL_DATABASE_PASSWORD")
+    host = os.getenv("POSTGRES_CONN_HOST")
+    port = os.getenv("POSTGRES_CONN_PORT")
+
+    conn = None
+
+    try:
+        conn = psycopg2.connect(
+            dbname=dbname,
+            user=user,
+            password=password,
+            host=host,
+            port=port
+        )
+        yield conn
+
+    except psycopg2.Error as e:
+        pytest.fail(f"Erreur de connexion à la BDD: {e}")
+
+    finally:
+        if conn:
+            conn.close()
