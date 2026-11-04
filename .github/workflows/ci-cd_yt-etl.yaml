@@ -90,6 +90,18 @@ jobs:
           docker compose logs
           exit 1
 
+      - name: Register DAGs in the metadata DB
+        run: |
+          docker compose exec -T airflow-worker airflow dags reserialize
+          for i in $(seq 1 20); do
+            COUNT=$(docker compose exec -T airflow-worker airflow dags list -o plain | grep -c -E "produce_json|update_db|data_quality" || true)
+            [ "$COUNT" -ge 3 ] && exit 0
+            sleep 5
+          done
+          echo "DAGs non enregistrés"
+          docker compose exec -T airflow-worker airflow dags list
+          exit 1
+
       - name: Run Unit and Integration Tests
         run: docker compose exec -T airflow-worker sh -c "pytest tests/ -v"
 
